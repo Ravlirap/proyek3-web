@@ -4,31 +4,44 @@
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <div class="row align-items-center min-vh-100">
-            <div class="col-lg-6" data-aos="fade-up">
-                <h1>
-                    Hitung Kalori, <br>
-                    <span>Wujudkan Hidup Sehat!</span>
-                </h1>
-                <p class="lead">GoHealth membantu Anda menghitung kebutuhan kalori harian, memantau asupan makanan, dan mencapai target berat badan ideal dengan mudah dan cepat.</p>
-                <div>
-                    <a href="#download" class="btn btn-primary-custom">
-                        <i class="fas fa-download me-2"></i>Download Sekarang
-                    </a>
-                    <a href="#calculator" class="btn btn-outline-custom">
-                        <i class="fas fa-calculator me-2"></i>Coba Kalkulator
-                    </a>
-                </div>
-                <div class="mt-4">
-                    <small class="text-muted">
-                        <i class="fas fa-check-circle text-success me-1"></i> Gratis selamanya &nbsp;
-                        <i class="fas fa-check-circle text-success me-1"></i> Tanpa iklan &nbsp;
-                        <i class="fas fa-check-circle text-success me-1"></i> 1M+ pengguna
-                    </small>
+        <div class="row align-items-center" style="min-height: 80vh;">
+            <div class="col-lg-6" data-aos="fade-up" style="padding-top: 40px;">
+                <div class="hero-text-content">
+                    <h1>
+                        Hitung Kalori, <br>
+                        <span>Wujudkan Hidup Sehat!</span>
+                    </h1>
+
+                    <p class="lead">
+                        GoHealth membantu Anda menghitung kebutuhan kalori harian, memantau asupan makanan, dan mencapai target berat badan ideal dengan mudah dan cepat.
+                    </p>
+
+                    <div>
+                        <a href="#download" class="btn btn-primary-custom">
+                            <i class="fas fa-download me-2"></i>Download Sekarang
+                        </a>
+                        <a href="#calculator" class="btn btn-outline-custom">
+                            <i class="fas fa-calculator me-2"></i>Coba Kalkulator
+                        </a>
+                    </div>
+
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-check-circle text-success me-1"></i> Gratis selamanya &nbsp;
+                            <i class="fas fa-check-circle text-success me-1"></i> Tanpa iklan &nbsp;
+                            <i class="fas fa-check-circle text-success me-1"></i> 1M+ pengguna
+                        </small>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-6 text-center" data-aos="fade-left">
-                <img src="https://via.placeholder.com/500x500/10b981/ffffff?text=GoHealth+App" alt="GoHealth App" class="img-fluid hero-image" style="max-width: 80%; border-radius: 40px;">
+
+            <div class="col-lg-6 text-center" data-aos="fade-left" style="padding-top: 40px;">
+                <div class="animated-food-icon">
+                    <i class="fas fa-apple-alt"></i>
+                    <i class="fas fa-carrot"></i>
+                    <i class="fas fa-heartbeat"></i>
+                    <i class="fas fa-leaf"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -326,6 +339,79 @@
         </div>
     </div>
 </section>
+
+<style>
+/* Animasi ikon berputar dan bergerak */
+.animated-food-icon {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    animation: containerFloat 4s ease-in-out infinite;
+}
+
+.animated-food-icon i {
+    position: absolute;
+    font-size: 4rem;
+    color: #145A43;
+    filter: drop-shadow(0 0 15px rgba(20, 90, 67, 0.5));
+    animation: rotateIcon 12s linear infinite;
+}
+
+.animated-food-icon i:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.animated-food-icon i:nth-child(2) {
+    top: 60%;
+    left: 15%;
+    animation-delay: 2s;
+}
+
+.animated-food-icon i:nth-child(3) {
+    top: 30%;
+    right: 20%;
+    animation-delay: 4s;
+}
+
+.animated-food-icon i:nth-child(4) {
+    bottom: 20%;
+    right: 25%;
+    animation-delay: 6s;
+}
+
+@keyframes rotateIcon {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes containerFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* Background hero dengan gradien yang lebih menarik */
+.hero {
+    background: radial-gradient(circle at 10% 20%, rgba(20, 90, 67, 0.15), #000000 80%),
+                linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+}
+</style>
 
 <script>
 function calculateCalorie() {
