@@ -17,9 +17,10 @@
     
     <style>
         :root {
-            --primary: #145A43;
-            --primary-dark: #0F3D2E;
-            --primary-light: #1e7a5c;
+            --primary: #40c297;
+            /* --primary: #000000; */
+            --primary-dark: #059669;
+            --primary-light: #34d399;
             --dark: #000000;
             --dark-gray: #111111;
             --medium-gray: #1a1a1a;
@@ -36,8 +37,7 @@
         
         body {
             font-family: 'Segoe UI', 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at 30% 10%, rgba(20, 90, 67, 0.08), #000000 90%),
-                        linear-gradient(135deg, #050505 0%, #0a0a0a 50%, #050505 100%);
+            background: radial-gradient(circle at left, #145C43, #021D16);
             color: var(--white);
             overflow-x: hidden;
             position: relative;
@@ -77,7 +77,7 @@
         
         /* Navbar */
         .navbar {
-            background: rgba(0, 0, 0, 0.92);
+            background: radial-gradient(circle at left, #145C43, #021D16);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(20, 90, 67, 0.25);
             transition: all 0.3s ease;
@@ -144,7 +144,7 @@
         /* Hero Section */
         .hero {
             min-height: 100vh;
-            background: radial-gradient(circle at 10% 20%, rgba(20, 90, 67, 0.12), #000000 85%);
+            background: radial-gradient(circle at left, #145C43, #021D16);
             position: relative;
             overflow: hidden;
             padding: 120px 0 80px;
@@ -168,7 +168,35 @@
             margin-bottom: 30px;
             line-height: 1.6;
         }
-        
+        /* Perbaikan teks di hero section */
+.hero .btn-primary-custom,
+.hero .btn-outline-custom {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Jika teks masih kurang kontras, tambahkan efek shadow */
+.hero h1,
+.hero p {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Alternatif: buat background card yang lebih solid untuk kalkulator */
+.hero .btn-primary-custom {
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+}
+
+/* Tambahan efek glow untuk teks hero */
+.hero h1 span {
+    text-shadow: 0 0 15px rgba(20, 90, 67, 0.8);
+}
         .btn-primary-custom {
             background: var(--primary);
             color: var(--white);
@@ -691,7 +719,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <h5><i class="fas fa-heartbeat me-2"></i>GoHealth</h5>
+                    <h5>GoHealth</h5>
                     <p>Aplikasi penghitung kalori cerdas untuk gaya hidup sehat. Mulai perjalanan kesehatan Anda hari ini!</p>
                     <div class="social-icons mt-3">
                         <a href="#"><i class="fab fa-facebook"></i></a>

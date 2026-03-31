@@ -58,55 +58,46 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-calculator"></i>
+                        <i class="fas fa-camera"></i>
                     </div>
-                    <h3>Kalkulator Kalori</h3>
-                    <p>Hitung kebutuhan kalori harian berdasarkan usia, berat badan, tinggi badan, dan aktivitas fisik Anda dengan akurat.</p>
+                    <h3>Scan AI Makanan</h3>
+                    <p>Scan barcode atau ambil foto makanan untuk mendapatkan informasi kalori dan nutrisi secara otomatis.</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-utensils"></i>
+                        <i class="fas fa-calculator"></i>
                     </div>
-                    <h3>Database Makanan</h3>
-                    <p>Lebih dari 10.000 data makanan dengan informasi kalori dan nutrisi lengkap dari berbagai jenis masakan.</p>
+                    <h3>Estimasi Kalori Otomatis</h3>
+                    <p>Gunakan teknologi AI untuk memperkirakan kalori dalam makanan yang Anda konsumsi.</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
+                        <i class="fas fa-leaf"></i>
                     </div>
-                    <h3>Tracking Progress</h3>
+                    <h3>Tracking Nutrisi Harian</h3>
                     <p>Pantau perkembangan berat badan dan asupan kalori harian Anda dengan grafik interaktif yang mudah dipahami.</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-dumbbell"></i>
+                        <i class="fas fa-history"></i>
                     </div>
-                    <h3>Rekomendasi Olahraga</h3>
-                    <p>Dapatkan rekomendasi olahraga yang sesuai dengan target kebugaran dan preferensi Anda.</p>
+                    <h3>Riwayat Konsumsi</h3>
+                    <p>Lihat riwayat makanan dan minuman yang telah Anda catat sebelumnya.</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Pengingat Makan</h3>
-                    <p>Atur jadwal makan dan dapatkan notifikasi untuk menjaga pola makan teratur dan disiplin.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-share-alt"></i>
-                    </div>
-                    <h3>Komunitas & Berbagi</h3>
-                    <p>Bergabung dengan komunitas sehat dan bagikan pencapaian Anda untuk saling memotivasi.</p>
+                    <h3>Statistik Harian</h3>
+                    <p>Lihat analisis dan statistik konsumsi nutrisi harian Anda dalam bentuk grafik yang mudah dipahami.</p>
                 </div>
             </div>
         </div>
@@ -131,22 +122,29 @@
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
                 <div class="step-card">
                     <div class="step-number">2</div>
-                    <h4>Input Data Diri</h4>
-                    <p>Masukkan data diri seperti usia, berat, tinggi, dan target yang ingin dicapai</p>
+                    <h4>Ambil Foto Makanan</h4>
+                    <p>Ambil foto makanan yang Anda konsumsi untuk mendapatkan informasi kalori dan nutrisi secara otomatis</p>
                 </div>
             </div>
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
                 <div class="step-card">
                     <div class="step-number">3</div>
-                    <h4>Catat Asupan</h4>
-                    <p>Catat makanan dan minuman yang Anda konsumsi setiap hari dengan mudah</p>
+                    <h4>AI mendeteksi</h4>
+                    <p>AI akan secara otomatis mendeteksi makanan dalam foto yang Anda ambil dan memberikan informasi kalori serta nutrisi.</p>
                 </div>
             </div>
             <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
                 <div class="step-card">
                     <div class="step-number">4</div>
-                    <h4>Pantau Progress</h4>
-                    <p>Lihat perkembangan dan capai target kesehatan Anda dengan konsisten</p>
+                    <h4>Sistem Menghitung Nutrisi</h4>
+                    <p>Sistem akan menghitung total kalori dan nutrisi berdasarkan makanan yang telah dideteksi.</p>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="500">
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h4>Data Tersimpan di Dashboard</h4>
+                    <p>Data konsumsi nutrisi Anda akan tersimpan di dashboard untuk dianalisis lebih lanjut.</p>
                 </div>
             </div>
         </div>
