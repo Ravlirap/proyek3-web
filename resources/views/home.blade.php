@@ -8,7 +8,7 @@
             <div class="col-lg-6" data-aos="fade-up" style="padding-top: 40px;">
                 <div class="hero-text-content">
                     <h1>
-                        Hitung Kalori, <br>
+                        <span>Hitung Kalori,</span> <br>
                         <span>Wujudkan Hidup Sehat!</span>
                     </h1>
 
@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="mt-4">
-                        <small class="text-muted">
+                        <small class="text-white">
                             <i class="fas fa-check-circle text-success me-1"></i> Gratis selamanya &nbsp;
                             <i class="fas fa-check-circle text-success me-1"></i> Tanpa iklan &nbsp;
                             <i class="fas fa-check-circle text-success me-1"></i> 1M+ pengguna
@@ -76,7 +76,7 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-leaf"></i>
+                        <i class="fas fa-seedling"></i>
                     </div>
                     <h3>Tracking Nutrisi Harian</h3>
                     <p>Pantau perkembangan berat badan dan asupan kalori harian Anda dengan grafik interaktif yang mudah dipahami.</p>
@@ -224,8 +224,8 @@
         <div class="row">
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                 <div class="testimonial-card">
-                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User" class="testimonial-avatar">
-                    <div class="testimonial-name">John Doe</div>
+                    <img src="images/foto_1.jpeg" alt="User" class="testimonial-avatar">
+                    <div class="testimonial-name">Bunga Arini</div>
                     <div class="testimonial-position">Pengguna GoHealth</div>
                     <div class="testimonial-rating">
                         <i class="fas fa-star"></i>
@@ -241,8 +241,8 @@
             </div>
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                 <div class="testimonial-card">
-                    <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="User" class="testimonial-avatar">
-                    <div class="testimonial-name">Sarah Rahma</div>
+                    <img src="images/foto_2.jpeg" alt="User" class="testimonial-avatar">
+                    <div class="testimonial-name">Ravli</div>
                     <div class="testimonial-position">Fitness Enthusiast</div>
                     <div class="testimonial-rating">
                         <i class="fas fa-star"></i>
@@ -258,8 +258,8 @@
             </div>
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                 <div class="testimonial-card">
-                    <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="User" class="testimonial-avatar">
-                    <div class="testimonial-name">Budi A.</div>
+                    <img src="images/foto_3.jpeg" alt="User" class="testimonial-avatar">
+                    <div class="testimonial-name">Alda Aunillah</div>
                     <div class="testimonial-position">Atlet Profesional</div>
                     <div class="testimonial-rating">
                         <i class="fas fa-star"></i>
