@@ -28,7 +28,9 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Register berhasil',
             'token' => $token,
-            'user' => $user,
+            'user' => array_merge($user->toArray(), [
+                'photo_url' => $user->photo ? asset('storage/' . $user->photo) : null,
+            ]),
         ], 201);
     }
 
@@ -53,7 +55,9 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login berhasil',
             'token' => $token,
-            'user' => $user,
+            'user' => array_merge($user->toArray(), [
+                'photo_url' => $user->photo ? asset('storage/' . $user->photo) : null,
+            ]),
         ]);
     }
 
