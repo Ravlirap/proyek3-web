@@ -8,16 +8,30 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ScanSession extends Model
 {
+    /**
+     * Kolom yang dapat diisi secara mass-assignment.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'user_id',
         'image_path',
-        'total_kalori',
-        'confidence',
+        'total_calories',
+        'total_protein',
+        'total_carbs',
+        'total_fat',
     ];
 
+    /**
+     * Cast kolom numerik agar selalu dikembalikan sebagai float.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'total_kalori' => 'float',
-        'confidence'   => 'float',
+        'total_calories' => 'float',
+        'total_protein'  => 'float',
+        'total_carbs'    => 'float',
+        'total_fat'      => 'float',
     ];
 
     /*
@@ -26,15 +40,20 @@ class ScanSession extends Model
     |--------------------------------------------------------------------------
     */
 
-    /** Pemilik sesi scan ini. */
+    /**
+     * Pemilik sesi scan ini (nullable → guest scan diperbolehkan).
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /** Detail makanan yang ditemukan dalam sesi ini. */
-    public function scanDetails(): HasMany
+    /**
+     * Semua makanan yang terdeteksi AI dalam sesi ini.
+     * ScanSession HAS MANY ScanFood.
+     */
+    public function scanFoods(): HasMany
     {
-        return $this->hasMany(ScanDetail::class);
+        return $this->hasMany(ScanFood::class);
     }
 }

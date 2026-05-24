@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MealLogController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ScanController;
 use App\Http\Controllers\Api\WeeklyMonitoringController;
+use App\Http\Controllers\API\FoodScanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,9 +24,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/weekly-monitoring', [WeeklyMonitoringController::class, 'index']);
 
-    // Scan Food AI
+    // Scan Food AI (legacy)
     Route::post('/scan', [ScanController::class, 'scan']);
     Route::get('/scan/history', [ScanController::class, 'history']);
+
+    // Food Scan AI – FastAPI Integration
+    Route::post('/food-scan', [FoodScanController::class, 'scan']);
 
     // Profile & Foto Profile (CRUD)
     Route::get('/profile', [ProfileController::class, 'index']);          // R - lihat profile

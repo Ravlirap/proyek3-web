@@ -35,4 +35,19 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | AI Food Scan Service (FastAPI)
+    |--------------------------------------------------------------------------
+    |
+    | Konfigurasi koneksi ke FastAPI AI service untuk deteksi makanan.
+    | Ubah AI_FOOD_SCAN_ENDPOINT di file .env sesuai IP/port server FastAPI.
+    | Timeout dalam satuan detik.
+    |
+    */
+    'ai_food_scan' => [
+        'endpoint' => env('AI_FOOD_SCAN_ENDPOINT', 'http://192.168.61.33:8000/analyze-food'),
+        'timeout'  => env('AI_FOOD_SCAN_TIMEOUT', 30),
+    ],
+
 ];

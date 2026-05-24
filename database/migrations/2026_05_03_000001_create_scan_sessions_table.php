@@ -8,16 +8,20 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     * Menyimpan sesi scan AI per user beserta path gambar dan total kalori terdeteksi.
+     *
+     * Menyimpan sesi scan AI per request.
+     * user_id nullable → memungkinkan scan tanpa login (guest mode).
      */
     public function up(): void
     {
         Schema::create('scan_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('image_path');           // path relatif di storage/public/scan/
-            $table->decimal('total_kalori', 10, 2)->default(0);
-            $table->decimal('confidence', 5, 4)->default(0); // nilai 0.0000 – 1.0000
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('image_path');
+            $table->decimal('total_calories', 10, 2)->default(0);
+            $table->decimal('total_protein',  10, 2)->default(0);
+            $table->decimal('total_carbs',    10, 2)->default(0);
+            $table->decimal('total_fat',      10, 2)->default(0);
             $table->timestamps();
         });
     }

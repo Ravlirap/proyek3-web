@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ScanDetail;
+use App\Models\ScanFood;
 use App\Models\ScanSession;
-use App\Models\User;
-use App\Services\AiScanService;
+use App\Services\AIFoodScanService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,12 +13,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Throwable;
 
 class ScanController extends Controller
 {
     public function __construct(
-        private readonly AiScanService $aiService
+        private readonly AIFoodScanService $aiService
     ) {}
 
     /*
@@ -27,24 +27,24 @@ class ScanController extends Controller
     | POST /api/scan
     |--------------------------------------------------------------------------
     | Flow:
-    |   1. Validasi request  (image + user_id)
+    |   1. Validasi request  (image file, user_id optional)
     |   2. Simpan gambar ke  storage/app/public/scan/
-    |   3. Panggil AI service → { food, confidence }
-    |   4. Hitung nutrisi & kalori berdasarkan default_portion_grams
-    |   5. Simpan scan_sessions  &  scan_details  dalam satu transaksi DB
+    |   3. Kirim gambar ke FastAPI → terima daftar makanan + nutrisi
+    |   4. Hitung total nutrisi dari semua item yang terdeteksi
+    |   5. Simpan scan_sessions & scan_foods dalam satu transaksi DB
     |   6. Return JSON response
     */
 
     /**
-     * Proses scan gambar makanan.
+     * Proses scan gambar makanan via FastAPI AI.
      */
     public function scan(Request $request): JsonResponse
     {
         // ─── 1. Validasi ─────────────────────────────────────────────────────
         try {
             $validated = $request->validate([
-                'image'   => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'], // maks 5 MB
-                'user_id' => ['required', 'integer', 'exists:users,id'],
+                'image'   => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'], // maks 10 MB
+                'user_id' => ['nullable', 'integer', 'exists:users,id'],
             ]);
         } catch (ValidationException $e) {
             return $this->errorResponse(
@@ -58,75 +58,110 @@ class ScanController extends Controller
 
         try {
             // ─── 2. Upload & simpan gambar ───────────────────────────────────
-            $imageFile = $request->file('image');
-            $filename  = Str::uuid() . '.' . $imageFile->getClientOriginalExtension();
-
-            // Disimpan di storage/app/public/scan/ → bisa diakses via /storage/scan/
+            $imageFile  = $request->file('image');
+            $filename   = Str::uuid() . '.' . $imageFile->getClientOriginalExtension();
             $storedPath = $imageFile->storeAs('scan', $filename, 'public');
-
-            // URL yang bisa diakses publik
-            $imageUrl = Storage::disk('public')->url($storedPath);
-
-            // ─── 3. Simulasi AI ──────────────────────────────────────────────
+            $imageUrl   = Storage::disk('public')->url($storedPath);
             $absolutePath = Storage::disk('public')->path($storedPath);
-            $prediction   = $this->aiService->predict($absolutePath);
 
-            /** @var \App\Models\Food $food */
-            $food       = $prediction['food'];
-            $confidence = $prediction['confidence'];
+            // ─── 3. Kirim ke FastAPI AI ──────────────────────────────────────
+            $aiResult = $this->aiService->analyze($absolutePath);
+            // $aiResult = [ 'foods' => [ ['name'=>..., 'calories'=>..., ...], ... ] ]
 
-            // ─── 4. Hitung nutrisi berdasarkan porsi default ─────────────────
-            // Semua nilai nutrisi di tabel foods diasumsikan per 100 g.
-            // Kalori aktual = (default_portion_grams / 100) * calories
-            $porsiGram    = (float) $food->default_portion_grams;
-            $multiplier   = $porsiGram / 100;
+            $foods = $aiResult['foods'];
 
-            $kalori       = round($food->calories * $multiplier, 2);
-            $protein      = round($food->protein   * $multiplier, 2);
-            $lemak        = round($food->fat        * $multiplier, 2);
-            $karbohidrat  = round($food->carbs      * $multiplier, 2);
+            // ─── 4. Hitung total nutrisi dari semua item ─────────────────────
+            $totalCalories = 0;
+            $totalProtein  = 0;
+            $totalCarbs    = 0;
+            $totalFat      = 0;
+
+            foreach ($foods as $food) {
+                $totalCalories += (float) $food['calories'];
+                $totalProtein  += (float) $food['protein'];
+                $totalCarbs    += (float) $food['carbs'];
+                $totalFat      += (float) $food['fat'];
+            }
 
             // ─── 5. Simpan ke database ───────────────────────────────────────
             $scanSession = ScanSession::create([
-                'user_id'      => $validated['user_id'],
-                'image_path'   => $storedPath,
-                'total_kalori' => $kalori,
-                'confidence'   => $confidence,
+                'user_id'        => $validated['user_id'] ?? null,
+                'image_path'     => $storedPath,
+                'total_calories' => round($totalCalories, 2),
+                'total_protein'  => round($totalProtein,  2),
+                'total_carbs'    => round($totalCarbs,    2),
+                'total_fat'      => round($totalFat,      2),
             ]);
 
-            ScanDetail::create([
-                'scan_session_id' => $scanSession->id,
-                'food_id'         => $food->id,
-                'jumlah_gram'     => $porsiGram,
-                'total_kalori'    => $kalori,
-            ]);
+            // Simpan setiap makanan yang terdeteksi ke scan_foods
+            $savedFoods = [];
+            foreach ($foods as $food) {
+                $scanFood = ScanFood::create([
+                    'scan_session_id'         => $scanSession->id,
+                    'food_name'               => $food['name'],
+                    'calories'                => round((float) $food['calories'], 2),
+                    'protein'                 => round((float) $food['protein'],  2),
+                    'carbs'                   => round((float) $food['carbs'],    2),
+                    'fat'                     => round((float) $food['fat'],      2),
+                    'estimated_portion_grams' => round((float) $food['estimated_portion_grams'], 2),
+                ]);
+
+                $savedFoods[] = [
+                    'food_name'               => $scanFood->food_name,
+                    'calories'                => $scanFood->calories,
+                    'protein'                 => $scanFood->protein,
+                    'carbs'                   => $scanFood->carbs,
+                    'fat'                     => $scanFood->fat,
+                    'estimated_portion_grams' => $scanFood->estimated_portion_grams,
+                ];
+            }
 
             DB::commit();
 
             // ─── 6. Response JSON ────────────────────────────────────────────
             return $this->successResponse(
-                message: 'Scan berhasil',
+                message: 'Scan berhasil.',
                 data: [
                     'scan_session_id' => $scanSession->id,
-                    'nama_makanan'    => $food->name,
-                    'confidence'      => $confidence,
-                    'kalori'          => $kalori,
-                    'protein'         => $protein,
-                    'lemak'           => $lemak,
-                    'karbohidrat'     => $karbohidrat,
-                    'porsi_gram'      => $porsiGram,
                     'image_url'       => $imageUrl,
+                    'foods'           => $savedFoods,
+                    'total_nutrition' => [
+                        'calories' => round($totalCalories, 2),
+                        'protein'  => round($totalProtein,  2),
+                        'carbs'    => round($totalCarbs,    2),
+                        'fat'      => round($totalFat,      2),
+                    ],
                 ]
+            );
+
+        } catch (RuntimeException $e) {
+            // Error dari AIFoodScanService (timeout, invalid response, dsb.)
+            DB::rollBack();
+            Log::warning('ScanController@scan AIService error: ' . $e->getMessage());
+
+            // Hapus file gambar yang sudah ter-upload jika AI gagal
+            if (isset($storedPath)) {
+                Storage::disk('public')->delete($storedPath);
+            }
+
+            return $this->errorResponse(
+                message: $e->getMessage(),
+                errors:  ['ai_service' => $e->getMessage()],
+                status:  503
             );
 
         } catch (Throwable $e) {
             DB::rollBack();
-            Log::error('ScanController@scan error: ' . $e->getMessage(), [
+            Log::error('ScanController@scan unexpected error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
             ]);
 
+            if (isset($storedPath)) {
+                Storage::disk('public')->delete($storedPath);
+            }
+
             return $this->errorResponse(
-                message: 'Terjadi kesalahan saat memproses scan.',
+                message: 'Terjadi kesalahan internal saat memproses scan.',
                 errors:  ['server' => $e->getMessage()],
                 status:  500
             );
@@ -135,9 +170,10 @@ class ScanController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | Riwayat scan milik user
+    | GET /api/scan/history
     |--------------------------------------------------------------------------
-    | GET /api/scan/history?user_id=1
+    | Query param: user_id (required)
+    | Mengembalikan riwayat sesi scan beserta daftar makanan yang terdeteksi.
     */
 
     /**
@@ -153,24 +189,30 @@ class ScanController extends Controller
             return $this->errorResponse('Validasi gagal.', $e->errors(), 422);
         }
 
-        $sessions = ScanSession::with(['scanDetails.food'])
+        $sessions = ScanSession::with('scanFoods')
             ->where('user_id', $validated['user_id'])
             ->latest()
             ->paginate(15);
 
-        $mapped = $sessions->getCollection()->map(function (ScanSession $session) {
-            $detail = $session->scanDetails->first();
-            $food   = $detail?->food;
-
-            return [
-                'scan_session_id' => $session->id,
-                'nama_makanan'    => $food?->name ?? 'Tidak diketahui',
-                'confidence'      => $session->confidence,
-                'kalori'          => $session->total_kalori,
-                'image_url'       => Storage::disk('public')->url($session->image_path),
-                'scanned_at'      => $session->created_at->toIso8601String(),
-            ];
-        });
+        $mapped = $sessions->getCollection()->map(fn (ScanSession $session) => [
+            'scan_session_id' => $session->id,
+            'image_url'       => Storage::disk('public')->url($session->image_path),
+            'total_nutrition' => [
+                'calories' => $session->total_calories,
+                'protein'  => $session->total_protein,
+                'carbs'    => $session->total_carbs,
+                'fat'      => $session->total_fat,
+            ],
+            'foods'      => $session->scanFoods->map(fn (ScanFood $f) => [
+                'food_name'               => $f->food_name,
+                'calories'                => $f->calories,
+                'protein'                 => $f->protein,
+                'carbs'                   => $f->carbs,
+                'fat'                     => $f->fat,
+                'estimated_portion_grams' => $f->estimated_portion_grams,
+            ]),
+            'scanned_at' => $session->created_at->toIso8601String(),
+        ]);
 
         return response()->json([
             'success' => true,
@@ -186,7 +228,7 @@ class ScanController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | Helper – format JSON response
+    | Helpers
     |--------------------------------------------------------------------------
     */
 
